@@ -2,10 +2,7 @@
 include 'header.php';
 include 'DBConn.php';
 
-/*
-Student Name: YOUR NAME
-Student Number: YOUR NUMBER
-*/
+
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
@@ -52,6 +49,8 @@ if(isset($_POST['upload'])){
 <input name="name" placeholder="Product Name" required>
 
 <input name="price" placeholder="Price" required>
+
+<input type="text" name="brand" placeholder="Brand" required>
 
 <textarea name="description" placeholder="Description"></textarea>
 

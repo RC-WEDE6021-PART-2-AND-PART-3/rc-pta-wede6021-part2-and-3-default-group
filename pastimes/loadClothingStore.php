@@ -2,11 +2,7 @@
 
 include 'DBConn.php';
 
-/*
-Student Name: YOUR NAME
-Student Number: YOUR NUMBER
-Purpose: Create ClothingStore database tables
-*/
+
 
 
 $conn->query("SET FOREIGN_KEY_CHECKS = 0");

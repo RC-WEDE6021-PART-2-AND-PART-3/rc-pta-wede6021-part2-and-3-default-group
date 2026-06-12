@@ -1,11 +1,6 @@
 <?php
-include 'header.php'; // this already has session_start()
+include 'header.php';
 include 'DBConn.php';
-
-/*
-Student Name: YOUR NAME
-Student Number: YOUR NUMBER
-*/
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
@@ -14,10 +9,11 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-$sql = "SELECT tblClothes.* FROM tblCart 
-JOIN tblClothes 
-ON tblCart.product_id = tblClothes.product_id
-WHERE tblCart.user_id = $user_id";
+$sql = "SELECT tblClothes.*, tblCart.quantity
+        FROM tblCart
+        JOIN tblClothes
+        ON tblCart.product_id = tblClothes.product_id
+        WHERE tblCart.user_id = $user_id";
 
 $result = $conn->query($sql);
 
@@ -33,26 +29,71 @@ $total = 0;
 
 while($row = $result->fetch_assoc()){
 
+    $subtotal = $row['price'] * $row['quantity'];
+
     echo "<div class='box'>";
-    echo "<img src='images/".$row['image']."'>";
+
+    echo "<img src='images/".$row['image']."' width='200'>";
+
     echo "<h3>".$row['product_name']."</h3>";
-    echo "<p>R".$row['price']."</p>";
-    echo "<a href='remove.php?id=".$row['product_id']."'>Remove</a>";
+
+    echo "<p>Price: R".$row['price']."</p>";
+
+    echo "<form action='updateCart.php' method='POST'>";
+
+    echo "<input type='hidden'
+                 name='product_id'
+                 value='".$row['product_id']."'>";
+
+    echo "<label>Quantity:</label><br>";
+
+    echo "<input type='number'
+                 name='quantity'
+                 value='".$row['quantity']."'
+                 min='1'>";
+
+    echo "<br><br>";
+
+    echo "<button type='submit'>
+            Update Cart
+          </button>";
+
+    echo "</form>";
+
+    echo "<br>";
+
+    echo "<p><strong>Subtotal: R".$subtotal."</strong></p>";
+
+    echo "<a href='remove.php?id=".$row['product_id']."'>
+            <button>Remove Item</button>
+          </a>";
+
     echo "</div>";
 
-    $total += $row['price'];
+    $total += $subtotal;
 }
 
 echo "</div>";
-echo "<h3>Total: R".$total."</h3>";
 
-// ✅ SHOW CHECKOUT ONLY IF CART NOT EMPTY
+echo "<h2>Total: R".$total."</h2>";
+
+echo "<br>";
+
+echo "<a href='products.php'>
+        <button>Continue Shopping</button>
+      </a>";
+
+echo "&nbsp;&nbsp;";
+
 if($total > 0){
-    echo "<br><a href='checkout.php'>
+
+    echo "<a href='checkout.php'>
             <button>Proceed to Checkout</button>
           </a>";
-} else {
-    echo "<p>Your cart is empty</p>";
+
+}else{
+
+    echo "<p>Your cart is empty.</p>";
 }
 
 echo "</div>";

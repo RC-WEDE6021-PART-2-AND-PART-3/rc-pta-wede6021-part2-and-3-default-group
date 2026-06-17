@@ -56,7 +56,9 @@ $result = $conn->query("SELECT * FROM tblUser");
                    onclick="return confirm('Delete this user?');">
                     <button>Delete User</button>
                 </a>
-
+<a href="viewMessages.php">
+    <button>View Messages</button>
+</a>
             </div>
 
         <?php } ?>

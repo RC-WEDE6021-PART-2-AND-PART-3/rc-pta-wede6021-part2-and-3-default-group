@@ -9,10 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-/*
-Student Name: YOUR NAME
-Student Number: YOUR NUMBER
-*/
+
 
 // GET CART ITEMS + QUANTITY
 $sql = "SELECT tblClothes.*, tblCart.quantity
@@ -71,40 +68,112 @@ if(isset($_POST['pay'])){
 
     <h3>Total Amount: R<?php echo number_format($total, 2); ?></h3>
 
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
 
-        <label>Select Payment Method:</label>
+    <label>Delivery Address</label>
 
-        <br><br>
+    <textarea
+        name="address"
+        required
+        placeholder="Enter delivery address"></textarea>
 
-        <input type="radio"
-               name="payment"
-               value="Cash on Delivery"
-               required>
-        Cash on Delivery
+    <br><br>
 
-        <br><br>
+    <label>Select Payment Method</label>
 
-        <input type="radio"
-               name="payment"
-               value="Card Payment">
-        Card Payment
+    <br><br>
 
-        <br><br>
+    <input type="radio"
+           name="payment"
+           value="Cash on Delivery"
+           onclick="showFields()"
+           required>
+    Cash on Delivery
 
-        <input type="radio"
-               name="payment"
-               value="EFT">
-        EFT / Bank Transfer
+    <br><br>
 
-        <br><br>
+    <input type="radio"
+           name="payment"
+           value="Card Payment"
+           onclick="showFields()">
+    Card Payment
 
-        <button name="pay">
-            Confirm Payment
-        </button>
+    <br><br>
 
-    </form>
+    <input type="radio"
+           name="payment"
+           value="EFT"
+           onclick="showFields()">
+    EFT / Bank Transfer
+
+    <br><br>
+
+    <div id="cardFields" style="display:none;">
+
+        <input type="text"
+               name="card_name"
+               placeholder="Cardholder Name">
+
+        <input type="text"
+               name="card_number"
+               placeholder="Card Number">
+
+        <input type="text"
+               name="expiry"
+               placeholder="MM/YY">
+
+        <input type="text"
+               name="cvv"
+               placeholder="CVV">
+
+    </div>
+
+    <div id="eftFields" style="display:none;">
+
+        <label>Upload Proof of Payment</label>
+
+        <input type="file"
+               name="proof">
+
+    </div>
+
+    <br>
+
+    <button name="pay">
+        Confirm Payment
+    </button>
+
+</form>
 
 </div>
+<script>
+function showFields(){
+
+    let payment =
+    document.querySelector(
+    'input[name="payment"]:checked'
+    ).value;
+
+    document.getElementById(
+    "cardFields"
+    ).style.display = "none";
+
+    document.getElementById(
+    "eftFields"
+    ).style.display = "none";
+
+    if(payment === "Card Payment"){
+        document.getElementById(
+        "cardFields"
+        ).style.display = "block";
+    }
+
+    if(payment === "EFT"){
+        document.getElementById(
+        "eftFields"
+        ).style.display = "block";
+    }
+}
+</script>
 
 <?php include 'footer.php'; ?>
